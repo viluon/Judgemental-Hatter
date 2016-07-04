@@ -1,4 +1,5 @@
 
+-- Judgemental Hatter, CCJam judgement helper software by @viluon
 
 local old_term = term.current()
 local w, h = old_term.getSize()
@@ -65,24 +66,54 @@ local categories = {
 		name = "Usefulness";
 		descriptions = {
 			[[
-- Project has no real use
-- 
+- Project has no use]];
+			[[
+- Project only has use in
+  an unrealistic scenario]];
+			[[
+- Project might be helpful
+  in one or two very rare
+  cases]];
+			[[
+* Project might come handy
+  in a few unusual cases]];
+			[[
+* Project is helpful
+  from time to time]];
+			[[
++ Project helps mitigate
+  or speed up the process
+  of dealing with a
+  common issue]];
+			[[
++ Project helps mitigate
+  or speed up the process
+  of dealing with a
+  complex issue
++ Efficient interface
+  saves time and effort
+  of the user]];
+			[[
++ ]];
+			[[
 ]];
-			"less poop";
-			"almost no poop";
-			"only golden poop";
+			[[
+]];
+			[[
+]];
 		};
 		labels = {
+			"Completely Useless";
 			"Useless";
-			"Useless";
-			"Useless";
-			"Occasionally Helpful";
+			"Almost Useless";
+			"Rarely Helpful";
 			"Occasionally Helpful";
 			"Helpful";
 			"Very Helpful";
 			"Handy";
 			"For Every Day Usage";
 			"Exceptionally Useful";
+			"Incredibly Useful";
 		}
 	};
 	{
@@ -220,10 +251,42 @@ local categories = {
 		range = { 0, 10 };
 		name = "Functionality";
 		descriptions = {
-			"poop";
-			"less poop";
-			"almost no poop";
-			"only golden poop";
+			[[
+- Program contains major
+  bugs
+- Does not start
+  without changes to the
+  source code]];
+			[[
+- Program has serious
+  issues that make
+  any operation with it
+  a complicated process]];
+			[[
+- Program has annoying
+  bugs that would have
+  been ruled out by
+  limited testing
+- Frequent crashes
+  cause loss of data
+  or work in progress]];
+			[[
+- Program has easily
+  noticeable bugs]];
+			[[
+]];
+			[[
+]];
+			[[
+]];
+			[[
+]];
+			[[
+]];
+			[[
+]];
+			[[
+]];
 		};
 		labels = {
 			"Unusable";
