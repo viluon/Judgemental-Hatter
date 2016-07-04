@@ -1,6 +1,8 @@
 
 -- Judgemental Hatter, CCJam judgement helper software by @viluon
 
+local directory = fs.getDir( shell.getRunningProgram() )
+
 local old_term = term.current()
 local w, h = old_term.getSize()
 local main_window = window.create( old_term, 1, 1, w, h )
@@ -374,6 +376,27 @@ function draw()
 
 	main_window.setVisible( true )
 end
+
+--- Draw the welcome screen, with a hat
+-- @return nil
+function draw_hat()
+	term.setBackgroundColour( colours.white )
+	term.clear()
+
+	-- This hat is 22x10
+	local hat = paintutils.loadImage( directory .. "/hat.nfp" )
+
+	paintutils.drawImage( hat, w / 2 - 11, h / 2 - 5 )
+
+	local welcome_message = "Judgemental Hatter"
+	term.setTextColour( colours.black )
+	term.setCursorPos( w / 2 - #welcome_message / 2, h / 2 + 7 )
+	term.write( welcome_message )
+
+	sleep( 2 )
+end
+
+draw_hat()
 
 while running do
 	local ev = { coroutine.yield() }
