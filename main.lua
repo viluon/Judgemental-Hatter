@@ -327,7 +327,14 @@ function draw()
 
 		term.setCursorPos( 2, scroll + total_y )
 		term.setTextColour( cat_item.colour or colours.black )
-		term.write( cat_item.name .. ": " .. ( cat_item.value and cat_item.labels[ cat_item.value + 1 ] or "Unknown" ) )
+		term.write( cat_item.name .. ": " )
+
+		if cat_item.value and cat_item.value + 1 == #cat_item.labels then
+			draw_hat()
+			term.write( " " )
+		end
+
+		term.write( cat_item.value and cat_item.labels[ cat_item.value + 1 ] or "Unknown" )
 
 		term.setTextColour( colours.grey )
 		term.setCursorPos( arrow_position, scroll + total_y + 1 )
@@ -379,7 +386,7 @@ end
 
 --- Draw the welcome screen, with a hat
 -- @return nil
-function draw_hat()
+function draw_welcome_screen()
 	term.setBackgroundColour( colours.white )
 	term.clear()
 
@@ -397,7 +404,22 @@ function draw_hat()
 	os.startTimer( 1 )
 end
 
-draw_hat()
+--- Prints a hat
+-- @return Empty string
+function draw_hat()
+	local old_tc, old_bc = term.getTextColour(), term.getBackgroundColour()
+
+	term.setTextColour( colours.white )
+	term.setBackgroundColour( colours.grey )
+	term.write( "\133\138" )
+
+	term.setTextColour( old_tc )
+	term.setBackgroundColour( old_bc )
+
+	return ""
+end
+
+draw_welcome_screen()
 
 while running do
 	local ev = { coroutine.yield() }
