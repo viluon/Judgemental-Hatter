@@ -90,16 +90,85 @@ local categories = {
 		range = { 0, 6 };
 		name = "Design";
 		descriptions = {
-			"poop";
-			"less poop";
-			"almost no poop";
-			"only golden poop";
+			[[
+- Bad choice of colours
+  and other elements of
+  visual style
+- Interface is unfriendly,
+  no help section or
+  documentation is present
+- User errors caused by
+  misunderstanding
+  functionality are common,
+  and error recovery
+  is unhelpful or not
+  present at all]];
+			[[
+- Bad choice of colours
+  and other elements of
+  visual style
+- Interface diverges in
+  different parts of the
+  program]];
+			[[
+* Interface posseses
+  some sort of a style
+  that is used in most
+  parts of the program
+- Functionality of
+  various elements is
+  unclear without prior
+  study of technical
+  documentation]];
+			[[
++ Interface style does not
+  change in different parts
+  of the program
+- Some functionality might
+  be unclear, which is not
+  addressed in the help
+  section or documentation]];
+			[[
++ Functionality of
+  various elements is
+  clear and does not
+  surprise the user
++ Interface is easy to
+  use out of the box,
+  no need to study
+  documentation
+  (for libraries, tutorials
+  do not count as
+  documentation)]];
+			[[
++ Design was apparently
+  planned beforehand, with
+  great caution
++ Interface follows
+  logical guidelines
+  and sticks to them
+  throughout different
+  parts of the program]];
+			[[
++ Everything works as
+  expected, possibly unclear
+  functionality is explained
+  in the form of a help section
+  or a tutorial
++ Visual style of the interface
+  is common for all sections
++ Error recovery for common
+  mistakes works well
+]];
 		};
 		labels = {
-			"Unoriginal";
-			"Common";
-			"Original";
-			"Outstanding";
+			"Terrible";
+			"Unpleasant";
+			"Unintuitive";
+			"Okay";
+			"Intuitive";
+			"Deliberate";
+			"Perfect"
 		}
 	};
 	{
@@ -108,14 +177,39 @@ local categories = {
 		name = "Speed";
 		descriptions = {
 			[[
-- 
-]];
-			"less poop";
-			"almost no poop";
-			"only golden poop";
+- Program is unbearably
+  slow, which makes it
+  unusable
+- Crashes with 'too long
+  without yielding' errors
+  or contains useless
+  sleep calls]];
+			[[
+- Program runs slowly
+- Occasionally crashes
+  due to yielding problems]];
+			[[
+- Program is responsive,
+  but lag is noticeable
+* Does not crash due
+  to yielding problems]];
+			[[
++ Program is fast,
+  good FPS in GUIs
+* Occasionally lags]];
+			[[
++ Program contains
+  no visible lag
++ Runs at highest speeds
+  possible for the
+  platform (update every
+  50ms in CC)
++ Has no noticeable
+  speed issues]];
 		};
 		labels = {
 			"Very Slow";
+			"Rather Slow";
 			"Responsive";
 			"Quick";
 			"Swift";
