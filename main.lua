@@ -393,7 +393,8 @@ function draw_hat()
 	term.setCursorPos( w / 2 - #welcome_message / 2, h / 2 + 7 )
 	term.write( welcome_message )
 
-	sleep( 2 )
+	sleep( 1 )
+	os.startTimer( 1 )
 end
 
 draw_hat()
