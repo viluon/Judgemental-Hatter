@@ -25,17 +25,20 @@ local categories = {
 		range = { 0, 3 };
 		name = "Creativity";
 		descriptions = {
+			-- Unoriginal
 			[[
 - This type of projects is
   very well known
 - Project takes too much
   inspiration from
   others of its kind]];
+			-- Common
 			[[
 - This type of projects is
   very well known
 + Author included a few
   original ideas]];
+			-- Original
 			[[
 * This type of projects is
   either uncommon or
@@ -47,6 +50,7 @@ local categories = {
   in other projects of this
   kind
 ]];
+			-- Outstanding
 			[[
 + This project is unlike
   any other
@@ -67,26 +71,33 @@ local categories = {
 		range = { 0, 10 };
 		name = "Usefulness";
 		descriptions = {
+			-- Completely Useless
 			[[
 - Project has no use]];
+			-- Useless
 			[[
 - Project only has use in
   an unrealistic scenario]];
+			-- Almost Useless
 			[[
 - Project might be helpful
   in one or two very rare
   cases]];
+			-- Rarely Helpful
 			[[
 * Project might come handy
   in a few unusual cases]];
+			-- Occasionally Helpful
 			[[
 * Project is helpful
   from time to time]];
+			-- Helpful
 			[[
 + Project helps mitigate
   or speed up the process
   of dealing with a
   common issue]];
+			-- Very Helpful
 			[[
 + Project helps mitigate
   or speed up the process
@@ -95,12 +106,32 @@ local categories = {
 + Efficient interface
   saves time and effort
   of the user]];
+			-- Handy
+			[[
++ Project helps mitigate
+  or speed up the process
+  of dealing with multiple
+  complex issues
++ Defaults are set so that
+  the most common set ups
+  require little to no
+  input from the user]];
+			-- For Every Day Usage
+			[[
++ Project helps mitigate
+  or speed up the process
+  of dealing with numerous
+  related issues of
+  varying complexity
++ Easy to use, well
+  designed interface
+  makes any operation
+  with the program simple
+  and efficient]];
+			-- Exceptionally Useful
 			[[
 + ]];
-			[[
-]];
-			[[
-]];
+			-- Incredibly Useful
 			[[
 ]];
 		};
@@ -123,6 +154,7 @@ local categories = {
 		range = { 0, 6 };
 		name = "Design";
 		descriptions = {
+			-- Terrible
 			[[
 - Bad choice of colours
   and other elements of
@@ -136,6 +168,7 @@ local categories = {
   and error recovery
   is unhelpful or not
   present at all]];
+			-- Unpleasant
 			[[
 - Bad choice of colours
   and other elements of
@@ -143,6 +176,7 @@ local categories = {
 - Interface diverges in
   different parts of the
   program]];
+			-- Unintuitive
 			[[
 * Interface posseses
   some sort of a style
@@ -153,6 +187,7 @@ local categories = {
   unclear without prior
   study of technical
   documentation]];
+			-- Okay
 			[[
 + Interface style does not
   change in different parts
@@ -161,6 +196,7 @@ local categories = {
   be unclear, which is not
   addressed in the help
   section or documentation]];
+			-- Intuitive
 			[[
 + Functionality of
   various elements is
@@ -173,6 +209,7 @@ local categories = {
   (for libraries, tutorials
   do not count as
   documentation)]];
+			-- Deliberate
 			[[
 + Design was apparently
   planned beforehand, with
@@ -182,6 +219,7 @@ local categories = {
   and sticks to them
   throughout different
   parts of the program]];
+			-- Perfect
 			[[
 + Everything works as
   expected, possibly unclear
@@ -189,7 +227,8 @@ local categories = {
   in the form of a help section
   or a tutorial
 + Visual style of the interface
-  is common for all sections
+  is common for all of its
+  sections
 + Error recovery for common
   mistakes works well
 ]];
@@ -209,6 +248,7 @@ local categories = {
 		range = { 0, 4 };
 		name = "Speed";
 		descriptions = {
+			-- Very Slow
 			[[
 - Program is unbearably
   slow, which makes it
@@ -217,19 +257,23 @@ local categories = {
   without yielding' errors
   or contains useless
   sleep calls]];
+			-- Rather Slow
 			[[
 - Program runs slowly
 - Occasionally crashes
   due to yielding problems]];
+			-- Responsive
 			[[
 - Program is responsive,
   but lag is noticeable
 * Does not crash due
   to yielding problems]];
+			-- Quick
 			[[
 + Program is fast,
   good FPS in GUIs
 * Occasionally lags]];
+			-- Swift
 			[[
 + Program contains
   no visible lag
@@ -253,17 +297,21 @@ local categories = {
 		range = { 0, 10 };
 		name = "Functionality";
 		descriptions = {
+			-- Unusable
 			[[
 - Program contains major
   bugs
 - Does not start
   without changes to the
   source code]];
+			-- Seriously Broken
 			[[
 - Program has serious
   issues that make
   any operation with it
-  a complicated process]];
+  a complicated process
+- Crashes on valid input]];
+			-- Broken
 			[[
 - Program has annoying
   bugs that would have
@@ -271,30 +319,52 @@ local categories = {
   limited testing
 - Frequent crashes
   cause loss of data
-  or work in progress]];
+  or work in progress,
+  even with valid input]];
+			-- Flawed
 			[[
 - Program has easily
-  noticeable bugs]];
+  noticeable bugs
+- Graphical glitches
+  are frequent
+* Program occasionally
+  crashes, but only
+  when served invalid
+  input]];
+			-- Buggy
 			[[
 ]];
+			-- Faulty
 			[[
 ]];
+			-- Okay
 			[[
 ]];
+			-- Good
 			[[
 ]];
+			-- Extensive
 			[[
 ]];
+			-- Vast
 			[[
 ]];
+			-- Excellent
 			[[
 ]];
 		};
 		labels = {
 			"Unusable";
+			"Seriously Broken";
 			"Broken";
-			"Broken";
-			"Broken";
+			"Flawed";
+			"Buggy";
+			"Faulty";
+			"Okay";
+			"Good";
+			"Extensive";
+			"Vast";
+			"Excellent";
 		}
 	};
 }
