@@ -1,5 +1,6 @@
 
 local i = 150
+local last_i = i
 
 while true do
 	local ev = { os.pullEvent() }
@@ -12,9 +13,13 @@ while true do
 		end
 	end
 
-	term.write( i .. "=" )
-	term.setBackgroundColour( colours.white )
-	term.write( " " )
-	term.setBackgroundColour( colours.black )
-	print( " " .. string.char( i ) .. "\n" )
+	if i ~= last_i then
+		term.write( i .. "=" )
+		term.setBackgroundColour( colours.white )
+		term.write( " " )
+		term.setBackgroundColour( colours.black )
+		print( " " .. string.char( i ) .. "\n" )
+
+		last_i = i
+	end
 end
