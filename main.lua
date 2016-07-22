@@ -13,7 +13,7 @@ term.redirect( main_window )
 local running = true
 local scroll = 1
 
-local	draw, draw_hat, draw_welcome_screen, pick_scoring_system
+local	draw, draw_hat, draw_welcome_screen, pick_scoring_system, print_top_bar
 
 local item_not_judged_text = "Category not judged"
 local arrow_position = 5
@@ -104,12 +104,7 @@ function draw()
 		total_y = total_y + math.max( 4, newline_count + 2 )
 	end
 
-	term.setCursorPos( 2, 1 )
-	term.setBackgroundColour( colours.grey )
-	term.clearLine()
-
-	term.setTextColour( colours.white )
-	term.write( "Judgemental Hatter - by @viluon" )
+	print_top_bar()
 
 	if hats > 0 then
 		local hat_text = hats .. " top hat" .. ( hats > 1 and "s" or "" )
@@ -162,30 +157,90 @@ end
 --- Show a screen with scoring system options and wait for the user to choose
 -- @return nil
 function pick_scoring_system()
-	term.setBackgroundColour( colours.white )
-	term.clear()
+	local button_text = " Go! "
+	local quit_text = " Quit "
 
-	-- Print the possibilities
-	for i, sys in ipairs( scoring_systems ) do
-		term.setCursorPos( 2, h / 2 - #scoring_systems + i * 2 )
+	os.queueEvent( "mouse_click", 1, 1, 1 )
+
+	while true do
+		local ev = { os.pullEvent() }
+
+		if ev[ 1 ] == "mouse_click" then
+			local y = ev[ 4 ]
+
+			if y == h - 1 then
+				if ev[ 3 ] >= w - #button_text and scoring_system then
+					-- Hit the Go! button
+					break
+
+				elseif ev[ 3 ] >= 2 and ev[ 3 ] <= #quit_text + 1 then
+					-- Hit the Quit button
+					term.redirect( old_term )
+					term.setBackgroundColour( colours.black )
+					term.clear()
+					term.setCursorPos( 1, 1 )
+					error()
+				end
+			end
+
+			local index = math.floor( -h / 4 + #scoring_systems + y / 2 + 0.5 ) - 1
+
+			scoring_system = scoring_systems[ index ]
+		end
+
+		-- Redraw
+		term.setBackgroundColour( colours.white )
+		term.clear()
+
+		print_top_bar()
+		
+		term.setCursorPos( 3, 3 )
 		term.setTextColour( colours.black )
-		term.write( sys.name )
+		term.setBackgroundColour( colours.white )
+		term.write( "Pick a scoring system to judge with:" )
 
-		term.setTextColour( colours.grey )
-		term.write( " " .. sys.description )
+		-- Print the possibilities
+		for i, sys in ipairs( scoring_systems ) do
+			local y = h / 2 - #scoring_systems + i * 2
+
+			if scoring_system and scoring_system.ID == sys.ID then
+				term.setCursorPos( 2, y )
+				draw_hat()
+			end
+
+			term.setCursorPos( 5, y )
+			term.setTextColour( colours.black )
+			term.write( sys.name )
+
+			term.setTextColour( colours.grey )
+			term.write( " " .. sys.description )
+		end
+
+		if scoring_system then
+			-- Draw the Go! button
+			term.setCursorPos( w - #button_text, h - 1 )
+			term.setBackgroundColour( colours.green )
+			term.setTextColour( colours.white )
+			term.write( button_text )
+		end
+
+		-- Draw the Quit button
+		term.setCursorPos( 2, h - 1 )
+		term.setBackgroundColour( colours.red )
+		term.setTextColour( colours.white )
+		term.write( quit_text )
 	end
+end
 
-	-- Wait for input
-	local ev
-	repeat 
-		ev = { os.pullEvent( "mouse_click" ) }
+--- Show the fancy grey bar at the top of the screen
+-- @return nil
+function print_top_bar()
+	term.setCursorPos( 2, 1 )
+	term.setBackgroundColour( colours.grey )
+	term.clearLine()
 
-		local y = ev[ 4 ]
-		local index = math.floor( -h / 4 + #scoring_systems + y / 2 + 0.5 ) - 1
-
-		scoring_system = scoring_systems[ index ]
-
-	until scoring_system
+	term.setTextColour( colours.white )
+	term.write( "Judgemental Hatter - by @viluon" )
 end
 
 draw_welcome_screen()
@@ -583,7 +638,8 @@ elseif scoring_system.ID == "Lemmmy" then
   spherical shape]];
 				-- Supperpoop
 				[[
-+ Quality poop]];
++ Quality poop
+- Lyqyd]];
 				-- Excrement
 				[[
 + Royal shit]];
