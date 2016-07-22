@@ -25,6 +25,11 @@ local scoring_system
 
 local scoring_systems = {
 	{
+		name = "Tutorial";
+		ID = "tutorial";
+		description = "Learn how to use this program";
+	};
+	{
 		name = "Ardera Average";
 		ID = "ardera_average";
 		description = "CCJam 2016 scoring system";
@@ -54,7 +59,7 @@ function draw()
 		term.setTextColour( cat_item.colour or colours.black )
 		term.write( cat_item.name .. ": " )
 
-		if cat_item.value and cat_item.value + 1 == #cat_item.labels then
+		if cat_item.value and cat_item.value == cat_item.range[ 2 ] then
 			draw_hat()
 
 			-- Keep track of how many top hats have been awarded
@@ -163,6 +168,7 @@ function pick_scoring_system()
 	os.queueEvent( "mouse_click", 1, 1, 1 )
 
 	while true do
+		main_window.setVisible( false )
 		local ev = { os.pullEvent() }
 
 		if ev[ 1 ] == "mouse_click" then
@@ -216,19 +222,19 @@ function pick_scoring_system()
 			term.write( " " .. sys.description )
 		end
 
-		if scoring_system then
-			-- Draw the Go! button
-			term.setCursorPos( w - #button_text, h - 1 )
-			term.setBackgroundColour( colours.green )
-			term.setTextColour( colours.white )
-			term.write( button_text )
-		end
+		-- Draw the Go! button
+		term.setCursorPos( w - #button_text, h - 1 )
+		term.setBackgroundColour( scoring_system and colours.green or colours.lightGrey )
+		term.setTextColour( colours.white )
+		term.write( button_text )
 
 		-- Draw the Quit button
 		term.setCursorPos( 2, h - 1 )
 		term.setBackgroundColour( colours.red )
 		term.setTextColour( colours.white )
 		term.write( quit_text )
+
+		main_window.setVisible( true )
 	end
 end
 
@@ -650,6 +656,149 @@ elseif scoring_system.ID == "Lemmmy" then
 				"Supperpoop";
 				"Excrement";
 			}
+		};
+	}
+
+elseif scoring_system.ID == "tutorial" then
+	categories = {
+		{
+			value = 0;
+			range = { 0, 0 };
+			name = "Example Category";
+			descriptions = {
+				[[
+This is an example of
+a category.]];
+			};
+			labels = {
+				"Example Label";
+			};
+		};
+		{
+			value = 0;
+			range = { 0, 2 };
+			name = "Another Example Category";
+			descriptions = {
+				[[
+Judgemental Hatter uses
+categories to score
+individual parts of a
+program. To change your
+rating, click the up
+and down arrows to
+the left.]];
+				[[
+Category descriptions
+change based on their
+rating, they are here
+to hint you what
+should a competition
+entry of this rating
+look like. Click upvote
+again.]];
+				[[
+Descriptions are usually
+organised into bullet
+points.
++ This is a feature
+- While this is a
+  disadvantage.
+* This point is
+  neither good nor
+  bad, it's just a
+  description.]];
+			};
+			labels = {
+				"Example Label";
+				"Another Label";
+				"Just a Label";
+			};
+		};
+		{
+			value = 0;
+			range = { 0, 0 };
+			name = "Third Category";
+			descriptions = {
+				[[
+You can use the mouse
+wheel to scroll up
+and down the
+category list.]];
+			};
+			labels = {
+				"Example Label";
+			};
+		};
+		{
+			value = 0;
+			range = { 0, 2 };
+			name = "Example Category";
+			descriptions = {
+				[[
+Labels also change
+when you change your
+rating. They represent
+a summary of your
+judgement for
+the given category.]];
+				[[
+Labels also change
+when you change your
+rating. They represent
+a summary of your
+judgement for
+the given category.]];
+				[[
+Labels also change
+when you change your
+rating. They represent
+a summary of your
+judgement for
+the given category.]];
+			};
+			labels = {
+				"Bad Stuff";
+				"Okay Stuff";
+				"Good Stuff";
+			};
+		};
+		{
+			value = 0;
+			range = { 0, 0 };
+			name = "Category with a Hat";
+			descriptions = {
+				[[
+You might have noticed
+the occasional top hats.
+These mark the highest
+score for the given
+category, and their
+overall number is
+shown in the top right
+corner of the screen.]];
+			};
+			labels = {
+				"Hatty Label";
+			};
+		};
+		{
+			value = 0;
+			range = { 0, 0 };
+			name = "The End";
+			descriptions = {
+				[[
++ This is it!
+* Thanks for reading
+  through this. Happy
+  judging!
+* Feel free to
+  experiment with
+  JH, Q quits
+  the program.]];
+			};
+			labels = {
+				"Tutorial Complete";
+			};
 		};
 	}
 
