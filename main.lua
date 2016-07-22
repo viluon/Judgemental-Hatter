@@ -1,5 +1,6 @@
 
 -- Judgemental Hatter, CCJam judgement helper software by @viluon
+-- 🎩
 
 local directory = fs.getDir( shell.getRunningProgram() )
 
@@ -10,7 +11,7 @@ local main_window = window.create( old_term, 1, 1, w, h )
 term.redirect( main_window )
 
 local running = true
-local scroll = 0
+local scroll = 1
 
 local	draw
 
@@ -48,16 +49,14 @@ local categories = {
   original ideas or resolved
   a major issue present
   in other projects of this
-  kind
-]];
+  kind]];
 			-- Outstanding
 			[[
 + This project is unlike
   any other
 + A number of great ideas
   and innovations are
-  present
-]];
+  present]];
 		};
 		labels = {
 			"Unoriginal";
@@ -102,20 +101,16 @@ local categories = {
 + Project helps mitigate
   or speed up the process
   of dealing with a
-  complex issue
-+ Efficient interface
-  saves time and effort
-  of the user]];
+  complex issue]];
 			-- Handy
 			[[
 + Project helps mitigate
   or speed up the process
   of dealing with multiple
   complex issues
-+ Defaults are set so that
-  the most common set ups
-  require little to no
-  input from the user]];
++ Efficient interface
+  saves time and effort
+  of the user]];
 			-- For Every Day Usage
 			[[
 + Project helps mitigate
@@ -123,17 +118,31 @@ local categories = {
   of dealing with numerous
   related issues of
   varying complexity
++ Defaults are set so that
+  the most common set ups
+  require little to no
+  input from the user]];
+			-- Exceptionally Useful
+			[[
++ Project implements
+  major workflow speedups
 + Easy to use, well
   designed interface
   makes any operation
   with the program simple
   and efficient]];
-			-- Exceptionally Useful
-			[[
-+ ]];
 			-- Incredibly Useful
 			[[
-]];
++ Project implements
+  major workflow speedups
++ Easy to use, well
+  designed interface
+  makes any operation
+  with the program simple
+  and efficient
++ Automation takes control
+  over the majority
+  of repetitive tasks]];
 		};
 		labels = {
 			"Completely Useless";
@@ -230,8 +239,7 @@ local categories = {
   is common for all of its
   sections
 + Error recovery for common
-  mistakes works well
-]];
+  mistakes works well]];
 		};
 		labels = {
 			"Terrible";
@@ -333,9 +341,14 @@ local categories = {
   input]];
 			-- Buggy
 			[[
+- Program contains
+  recurring bugs,
+  but all parts are
+  usable
 ]];
 			-- Faulty
 			[[
+
 ]];
 			-- Okay
 			[[
@@ -390,6 +403,7 @@ function draw()
 	term.setBackgroundColour( colours.white )
 	term.clear()
 
+	local hats = 0
 	local total_y = 2
 	for i, cat_item in ipairs( categories ) do
 		-- ^ Meow
@@ -401,6 +415,8 @@ function draw()
 
 		if cat_item.value and cat_item.value + 1 == #cat_item.labels then
 			draw_hat()
+			hats = hats + 1
+
 			term.write( " " )
 		end
 
@@ -450,6 +466,14 @@ function draw()
 
 	term.setTextColour( colours.white )
 	term.write( "Judgemental Hatter - by @viluon" )
+
+	if hats > 0 then
+		local hat_text = hats .. " top hat" .. ( hats > 1 and "s" or "" )
+
+		term.setTextColour( colours.yellow )
+		term.setCursorPos( w - #hat_text, 1 )
+		term.write( hat_text )
+	end
 
 	main_window.setVisible( true )
 end
@@ -518,8 +542,6 @@ while running do
 						cat_item.value = false
 					end
 				end
-
-				--cat_item.colour = 2 ^ math.random( 0, 15 )
 
 				break
 			end
