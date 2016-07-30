@@ -12,6 +12,7 @@ term.redirect( main_window )
 
 local running = true
 local scroll = 1
+local total_y = 2
 
 local	draw, draw_hat, draw_welcome_screen, pick_scoring_system, print_top_bar
 
@@ -50,7 +51,7 @@ function draw()
 	term.clear()
 
 	local hats = 0
-	local total_y = 2
+	total_y = 2
 
 	-- Loop through all categories
 	for i, cat_item in ipairs( categories ) do
@@ -86,11 +87,11 @@ function draw()
 		term.setTextColour( colours.grey )
 
 		local description = ( cat_item.value and cat_item.descriptions[ cat_item.value + 1 ] or item_not_judged_text ) .. "\n"
-		local c = 1
+		local row = 1
 
 		-- Print the description, taking bullet points into account
 		for line in description:gmatch( "[^\n]+\n" ) do
-			term.setCursorPos( w / 5, scroll + total_y + c )
+			term.setCursorPos( w / 5, scroll + total_y + row )
 
 			line = line:gsub( "\t+", "", 1 )
 
@@ -106,7 +107,7 @@ function draw()
 			end
 
 			term.write( line )
-			c = c + 1
+			row = row + 1
 		end
 
 		local _, newline_count = description:gsub( "\n", "" )
@@ -815,7 +816,7 @@ while running do
 	local ev = { coroutine.yield() }
 
 	if ev[ 1 ] == "mouse_scroll" then
-		scroll = scroll - ev[ 2 ]
+		scroll = math.max( -total_y + h, math.min( 1, scroll - ev[ 2 ] ) )
 
 	elseif ev[ 1 ] == "terminate" then
 		running = false
