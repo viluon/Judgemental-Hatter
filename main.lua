@@ -51,6 +51,8 @@ function draw()
 
 	local hats = 0
 	local total_y = 2
+
+	-- Loop through all categories
 	for i, cat_item in ipairs( categories ) do
 		-- ^ Meow
 		cat_item.y_pos = total_y
@@ -86,8 +88,11 @@ function draw()
 		local description = ( cat_item.value and cat_item.descriptions[ cat_item.value + 1 ] or item_not_judged_text ) .. "\n"
 		local c = 1
 
+		-- Print the description, taking bullet points into account
 		for line in description:gmatch( "[^\n]+\n" ) do
 			term.setCursorPos( w / 5, scroll + total_y + c )
+
+			line = line:gsub( "\t+", "", 1 )
 
 			if line:sub( 1, 1 ) == "+" then
 				term.setTextColour( colours.green )
@@ -305,77 +310,77 @@ if scoring_system.ID == "ardera_average" then
 			descriptions = {
 				-- Completely Useless
 				[[
-	- Project has no use]];
+				- Project has no use]];
 				-- Useless
 				[[
-	- Project only has use in
-	  an unrealistic scenario]];
+				- Project only has use in
+				  an unrealistic scenario]];
 				-- Almost Useless
 				[[
-	- Project might be helpful
-	  in one or two very rare
-	  cases]];
+				- Project might be helpful
+				  in one or two very rare
+				  cases]];
 				-- Rarely Helpful
 				[[
-	* Project might come handy
-	  in a few unusual cases]];
+				* Project might come handy
+				  in a few unusual cases]];
 				-- Occasionally Helpful
 				[[
-	* Project is helpful
-	  from time to time]];
+				* Project is helpful
+				  from time to time]];
 				-- Helpful
 				[[
-	+ Project helps mitigate
-	  or speed up the process
-	  of dealing with a
-	  common issue]];
+				+ Project helps mitigate
+				  or speed up the process
+				  of dealing with a
+				  common issue]];
 				-- Very Helpful
 				[[
-	+ Project helps mitigate
-	  or speed up the process
-	  of dealing with a
-	  complex issue]];
+				+ Project helps mitigate
+				  or speed up the process
+				  of dealing with a
+				  complex issue]];
 				-- Handy
 				[[
-	+ Project helps mitigate
-	  or speed up the process
-	  of dealing with multiple
-	  complex issues
-	+ Efficient interface
-	  saves time and effort
-	  of the user]];
+				+ Project helps mitigate
+				  or speed up the process
+				  of dealing with multiple
+				  complex issues
+				+ Efficient interface
+				  saves time and effort
+				  of the user]];
 				-- For Every Day Usage
 				[[
-	+ Project helps mitigate
-	  or speed up the process
-	  of dealing with numerous
-	  related issues of
-	  varying complexity
-	+ Defaults are set so that
-	  the most common set ups
-	  require little to no
-	  input from the user]];
+				+ Project helps mitigate
+				  or speed up the process
+				  of dealing with numerous
+				  related issues of
+				  varying complexity
+				+ Defaults are set so that
+				  the most common set ups
+				  require little to no
+				  input from the user]];
 				-- Exceptionally Useful
 				[[
-	+ Project implements
-	  major workflow speedups
-	+ Easy to use, well
-	  designed interface
-	  makes any operation
-	  with the program simple
-	  and efficient]];
+				+ Project implements
+				  major workflow speedups
+				+ Easy to use, well
+				  designed interface
+				  makes any operation
+				  with the program simple
+				  and efficient]];
 				-- Incredibly Useful
 				[[
-	+ Project implements
-	  major workflow speedups
-	+ Easy to use, well
-	  designed interface
-	  makes any operation
-	  with the program simple
-	  and efficient
-	+ Automation takes control
-	  over the majority
-	  of repetitive tasks]];
+				+ Project implements
+				  major workflow speedups
+				+ Easy to use, well
+				  designed interface
+				  makes any operation
+				  with the program simple
+				  and efficient
+				+ Automation takes control
+				  over the majority
+				  of repetitive tasks]];
 			};
 			labels = {
 				"Completely Useless";
@@ -398,81 +403,81 @@ if scoring_system.ID == "ardera_average" then
 			descriptions = {
 				-- Terrible
 				[[
-	- Bad choice of colours
-	  and other elements of
-	  visual style
-	- Interface is unfriendly,
-	  no help section or
-	  documentation is present
-	- User errors caused by
-	  misunderstanding
-	  functionality are common,
-	  and error recovery
-	  is unhelpful or not
-	  present at all]];
+				- Bad choice of colours
+				  and other elements of
+				  visual style
+				- Interface is unfriendly,
+				  no help section or
+				  documentation is present
+				- User errors caused by
+				  misunderstanding
+				  functionality are common,
+				  and error recovery
+				  is unhelpful or not
+				  present at all]];
 				-- Unpleasant
 				[[
-	- Bad choice of colours
-	  and other elements of
-	  visual style
-	- Interface diverges in
-	  different parts of the
-	  program]];
+				- Bad choice of colours
+				  and other elements of
+				  visual style
+				- Interface diverges in
+				  different parts of the
+				  program]];
 				-- Unintuitive
 				[[
-	* Interface posseses
-	  some sort of a style
-	  that is used in most
-	  parts of the program
-	- Functionality of
-	  various elements is
-	  unclear without prior
-	  study of technical
-	  documentation]];
+				* Interface posseses
+				  some sort of a style
+				  that is used in most
+				  parts of the program
+				- Functionality of
+				  various elements is
+				  unclear without prior
+				  study of technical
+				  documentation]];
 				-- Okay
 				[[
-	+ Interface style does not
-	  change in different parts
-	  of the program
-	- Some functionality might
-	  be unclear, which is not
-	  addressed in the help
-	  section or documentation]];
+				+ Interface style does not
+				  change in different parts
+				  of the program
+				- Some functionality might
+				  be unclear, which is not
+				  addressed in the help
+				  section or documentation]];
 				-- Intuitive
 				[[
-	+ Functionality of
-	  various elements is
-	  clear and does not
-	  surprise the user
-	+ Interface is easy to
-	  use out of the box,
-	  no need to study
-	  documentation
-	  (for libraries, tutorials
-	  do not count as
-	  documentation)]];
+				+ Functionality of
+				  various elements is
+				  clear and does not
+				  surprise the user
+				+ Interface is easy to
+				  use out of the box,
+				  no need to study
+				  documentation
+				  (for libraries, tutorials
+				  do not count as
+				  documentation)]];
 				-- Deliberate
 				[[
-	+ Design was apparently
-	  planned beforehand, with
-	  great caution
-	+ Interface follows
-	  logical guidelines
-	  and sticks to them
-	  throughout different
-	  parts of the program]];
+				+ Design was apparently
+				  planned beforehand, with
+				  great caution
+				+ Interface follows
+				  logical guidelines
+				  and sticks to them
+				  throughout different
+				  parts of the program]];
 				-- Perfect
 				[[
-	+ Everything works as
-	  expected, possibly unclear
-	  functionality is explained
-	  in the form of a help section
-	  or a tutorial
-	+ Visual style of the interface
-	  is common for all of its
-	  sections
-	+ Error recovery for common
-	  mistakes works well]];
+				+ Everything works as
+				  expected, possibly unclear
+				  functionality is explained
+				  in the form of a help section
+				  or a tutorial
+				+ Visual style of the interface
+				  is common for all of its
+				  sections
+				+ Error recovery for common
+				  mistakes works well]];
 			};
 			labels = {
 				"Terrible";
@@ -491,39 +496,39 @@ if scoring_system.ID == "ardera_average" then
 			descriptions = {
 				-- Very Slow
 				[[
-	- Program is unbearably
-	  slow, which makes it
-	  unusable
-	- Crashes with 'too long
-	  without yielding' errors
-	  or contains useless
-	  sleep calls]];
+				- Program is unbearably
+				  slow, which makes it
+				  unusable
+				- Crashes with 'too long
+				  without yielding' errors
+				  or contains useless
+				  sleep calls]];
 				-- Rather Slow
 				[[
-	- Program runs slowly
-	- Occasionally crashes
-	  due to yielding problems]];
+				- Program runs slowly
+				- Occasionally crashes
+				  due to yielding problems]];
 				-- Responsive
 				[[
-	- Program is responsive,
-	  but lag is noticeable
-	* Does not crash due
-	  to yielding problems]];
+				- Program is responsive,
+				  but lag is noticeable
+				* Does not crash due
+				  to yielding problems]];
 				-- Quick
 				[[
-	+ Program is fast,
-	  good FPS in GUIs
-	* Occasionally lags]];
+				+ Program is fast,
+				  good FPS in GUIs
+				* Occasionally lags]];
 				-- Swift
 				[[
-	+ Program contains
-	  no visible lag
-	+ Runs at highest speeds
-	  possible for the
-	  platform (update every
-	  50ms in CC)
-	+ Has no noticeable
-	  speed issues]];
+				+ Program contains
+				  no visible lag
+				+ Runs at highest speeds
+				  possible for the
+				  platform (update every
+				  50ms in CC)
+				+ Has no noticeable
+				  speed issues]];
 			};
 			labels = {
 				"Very Slow";
@@ -540,64 +545,64 @@ if scoring_system.ID == "ardera_average" then
 			descriptions = {
 				-- Unusable
 				[[
-	- Program contains major
-	  bugs
-	- Does not start
-	  without changes to the
-	  source code]];
+				- Program contains major
+				  bugs
+				- Does not start
+				  without changes to the
+				  source code]];
 				-- Seriously Broken
 				[[
-	- Program has serious
-	  issues that make
-	  any operation with it
-	  a complicated process
-	- Crashes on valid input]];
+				- Program has serious
+				  issues that make
+				  any operation with it
+				  a complicated process
+				- Crashes on valid input]];
 				-- Broken
 				[[
-	- Program has annoying
-	  bugs that would have
-	  been ruled out by
-	  limited testing
-	- Frequent crashes
-	  cause loss of data
-	  or work in progress,
-	  even with valid input]];
+				- Program has annoying
+				  bugs that would have
+				  been ruled out by
+				  limited testing
+				- Frequent crashes
+				  cause loss of data
+				  or work in progress,
+				  even with valid input]];
 				-- Flawed
 				[[
-	- Program has easily
-	  noticeable bugs
-	- Graphical glitches
-	  are frequent
-	* Program occasionally
-	  crashes, but only
-	  when served invalid
-	  input]];
+				- Program has easily
+				  noticeable bugs
+				- Graphical glitches
+				  are frequent
+				* Program occasionally
+				  crashes, but only
+				  when served invalid
+				  input]];
 				-- Buggy
 				[[
-	- Program contains
-	  recurring bugs,
-	  but all parts are
-	  usable
-	]];
+				- Program contains
+				  recurring bugs,
+				  but all parts are
+				  usable
+				]];
 				-- Faulty
 				[[
 
-	]];
+				]];
 				-- Okay
 				[[
-	]];
+				]];
 				-- Good
 				[[
-	]];
+				]];
 				-- Extensive
 				[[
-	]];
+				]];
 				-- Vast
 				[[
-	]];
+				]];
 				-- Excellent
 				[[
-	]];
+				]];
 			};
 			labels = {
 				"Unusable";
@@ -636,19 +641,19 @@ elseif scoring_system.ID == "Lemmmy" then
 			name = "Poopiness";
 			descriptions = {
 				-- Poop
-			[[
-- Green poop]];
+				[[
+				- Green poop]];
 				-- Blobs
 				[[
-* Small blobs of
-  spherical shape]];
+				* Small blobs of
+				  spherical shape]];
 				-- Supperpoop
 				[[
-+ Quality poop
-- Lyqyd]];
+				+ Quality poop
+				- Lyqyd]];
 				-- Excrement
 				[[
-+ Royal shit]];
+				+ Royal shit]];
 			};
 			labels = {
 				"Poop";
@@ -667,8 +672,8 @@ elseif scoring_system.ID == "tutorial" then
 			name = "Example Category";
 			descriptions = {
 				[[
-This is an example of
-a category.]];
+				This is an example of
+				a category.]];
 			};
 			labels = {
 				"Example Label";
@@ -680,33 +685,33 @@ a category.]];
 			name = "Another Example Category";
 			descriptions = {
 				[[
-Judgemental Hatter uses
-categories to score
-individual parts of a
-program. To change your
-rating, click the up
-and down arrows to
-the left.]];
+				Judgemental Hatter uses
+				categories to score
+				individual parts of a
+				program. To change your
+				rating, click the up
+				and down arrows to
+				the left.]];
 				[[
-Category descriptions
-change based on their
-rating, they are here
-to hint you what
-should a competition
-entry of this rating
-look like. Click upvote
-again.]];
+				Category descriptions
+				change based on their
+				rating, they are here
+				to hint you what
+				should a competition
+				entry of this rating
+				look like. Click upvote
+				again.]];
 				[[
-Descriptions are usually
-organised into bullet
-points.
-+ This is a feature
-- While this is a
-  disadvantage.
-* This point is
-  neither good nor
-  bad, it's just a
-  description.]];
+				Descriptions are usually
+				organised into bullet
+				points.
+				+ This is a feature
+				- While this is a
+				  disadvantage.
+				* This point is
+				  neither good nor
+				  bad, it's just a
+				  description.]];
 			};
 			labels = {
 				"Example Label";
@@ -720,10 +725,10 @@ points.
 			name = "Third Category";
 			descriptions = {
 				[[
-You can use the mouse
-wheel to scroll up
-and down the
-category list.]];
+				You can use the mouse
+				wheel to scroll up
+				and down the
+				category list.]];
 			};
 			labels = {
 				"Example Label";
@@ -735,26 +740,26 @@ category list.]];
 			name = "Example Category";
 			descriptions = {
 				[[
-Labels also change
-when you change your
-rating. They represent
-a summary of your
-judgement for
-the given category.]];
+				Labels also change
+				when you change your
+				rating. They represent
+				a summary of your
+				judgement for
+				the given category.]];
 				[[
-Labels also change
-when you change your
-rating. They represent
-a summary of your
-judgement for
-the given category.]];
+				Labels also change
+				when you change your
+				rating. They represent
+				a summary of your
+				judgement for
+				the given category.]];
 				[[
-Labels also change
-when you change your
-rating. They represent
-a summary of your
-judgement for
-the given category.]];
+				Labels also change
+				when you change your
+				rating. They represent
+				a summary of your
+				judgement for
+				the given category.]];
 			};
 			labels = {
 				"Bad Stuff";
@@ -768,14 +773,14 @@ the given category.]];
 			name = "Category with a Hat";
 			descriptions = {
 				[[
-You might have noticed
-the occasional top hats.
-These mark the highest
-score for the given
-category, and their
-overall number is
-shown in the top right
-corner of the screen.]];
+				You might have noticed
+				the occasional top hats.
+				These mark the highest
+				score for the given
+				category, and their
+				overall number is
+				shown in the top right
+				corner of the screen.]];
 			};
 			labels = {
 				"Hatty Label";
@@ -787,14 +792,14 @@ corner of the screen.]];
 			name = "The End";
 			descriptions = {
 				[[
-+ This is it!
-* Thanks for reading
-  through this. Happy
-  judging!
-* Feel free to
-  experiment with
-  JH, Q quits
-  the program.]];
+				+ This is it!
+				* Thanks for reading
+				  through this. Happy
+				  judging!
+				* Feel free to
+				  experiment with
+				  JH, Q quits
+				  the program.]];
 			};
 			labels = {
 				"Tutorial Complete";
