@@ -816,7 +816,7 @@ while running do
 	local ev = { coroutine.yield() }
 
 	if ev[ 1 ] == "mouse_scroll" then
-		scroll = math.max( -total_y + h, math.min( 1, scroll - ev[ 2 ] ) )
+		scroll = math.min( 1, math.max( -total_y + h, scroll - ev[ 2 ] ) )
 
 	elseif ev[ 1 ] == "terminate" then
 		running = false
