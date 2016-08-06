@@ -11,12 +11,22 @@ local main_window = window.create( old_term, 1, 1, w, h )
 term.redirect( main_window )
 
 local running = true
+
+local states = {
+	welcome_screen = "welcome_screen";
+	category_screen = "category_screen";
+	overview_screen = "overview_screen";
+}
+local state = states.welcome_screen
+
 local scroll = 1
 local total_y = 2
+local top_bar_position = 1
 
-local	draw, draw_hat, draw_welcome_screen, pick_scoring_system, print_top_bar
+local	draw_category_screen, draw_hat, draw_welcome_screen, pick_scoring_system, print_top_bar
 
 local item_not_judged_text = "Category not judged"
+local finish_button_text = " Finish "
 local arrow_position = 5
 
 local is_game = false
@@ -44,7 +54,7 @@ local scoring_systems = {
 
 --- Redraw the screen
 -- @return nil
-function draw()
+function draw_category_screen()
 	main_window.setVisible( false )
 
 	term.setBackgroundColour( colours.white )
@@ -62,7 +72,9 @@ function draw()
 		term.setTextColour( cat_item.colour or colours.black )
 		term.write( cat_item.name .. ": " )
 
-		if cat_item.value and cat_item.value == cat_item.range[ 2 ] then
+		local has_max_value = cat_item.value and cat_item.value == cat_item.range[ 2 ]
+
+		if has_max_value then
 			draw_hat()
 
 			-- Keep track of how many top hats have been awarded
@@ -74,12 +86,15 @@ function draw()
 
 		term.write( cat_item.value and cat_item.labels[ cat_item.value + 1 ] or "Unknown" )
 
-		term.setTextColour( colours.grey )
+		-- Draw the up and down arrows
+		term.setTextColour( has_max_value and colours.lightGrey or colours.grey )
 		term.setCursorPos( arrow_position, scroll + total_y + 1 )
 		term.write( "\30" )
+		term.setTextColour( not cat_item.value and colours.lightGrey or colours.grey )
 		term.setCursorPos( arrow_position, scroll + total_y + 3 )
 		term.write( "\31" )
 
+		-- Draw the current value
 		term.setTextColour( colours.black )
 		term.setCursorPos( arrow_position, scroll + total_y + 2 )
 		term.write( cat_item.value or "-" )
@@ -113,17 +128,24 @@ function draw()
 		local _, newline_count = description:gsub( "\n", "" )
 
 		total_y = total_y + math.max( 4, newline_count + 2 )
-	end
+	end	-- Looped through all categories 
 
 	print_top_bar()
 
+	-- Print number of awarded top hats into the top bar
 	if hats > 0 then
 		local hat_text = hats .. " top hat" .. ( hats > 1 and "s" or "" )
 
 		term.setTextColour( colours.yellow )
-		term.setCursorPos( w - #hat_text, 1 )
+		term.setCursorPos( w - #hat_text, top_bar_position )
 		term.write( hat_text )
 	end
+
+	-- Draw the Finish button
+	term.setCursorPos( w - #finish_button_text, h - 1 )
+	term.setTextColour( colours.white )
+	term.setBackgroundColour( colours.blue )
+	term.write( finish_button_text )
 
 	main_window.setVisible( true )
 end
@@ -247,9 +269,11 @@ end
 --- Show the fancy grey bar at the top of the screen
 -- @return nil
 function print_top_bar()
-	term.setCursorPos( 2, 1 )
-	term.setBackgroundColour( colours.grey )
-	term.clearLine()
+	for i = 1, top_bar_position do
+		term.setCursorPos( 2, i )
+		term.setBackgroundColour( colours.grey )
+		term.clearLine()
+	end
 
 	term.setTextColour( colours.white )
 	term.write( "Judgemental Hatter - by @viluon" )
@@ -812,6 +836,8 @@ else
 	categories = {}
 end
 
+state = states.category_screen
+
 while running do
 	local ev = { coroutine.yield() }
 
@@ -821,26 +847,34 @@ while running do
 	elseif ev[ 1 ] == "terminate" then
 		running = false
 
-	elseif ev[ 1 ] == "mouse_click" and ev[ 4 ] > 1 then
-		-- Find the item we hit
-		for i = #categories, 1, -1 do
-			cat_item = categories[ i ]
+	elseif ev[ 1 ] == "mouse_click" and ev[ 4 ] > top_bar_position then
+		if state == states.category_screen then
+			if ev[ 4 ] == h - 1 and ev[ 3 ] >= w - #finish_button_text then
+				-- We hit the Finish button!
+				state = states.overview_screen
+			else
+				-- Find the item we hit
+				for i = #categories, 1, -1 do
+					cat_item = categories[ i ]
 
-			if cat_item.y_pos and cat_item.y_pos - ev[ 4 ] + scroll <= 0 and ev[ 3 ] == arrow_position then
-				local relative_position = cat_item.y_pos - ev[ 4 ] + scroll
+					if cat_item.y_pos and cat_item.y_pos - ev[ 4 ] + scroll <= 0 and ev[ 3 ] == arrow_position then
+						-- This is magic
+						local relative_position = cat_item.y_pos - ev[ 4 ] + scroll
 
-				if relative_position == -1 then
-					cat_item.value = math.min( ( cat_item.value or -1 ) + 1, cat_item.range[ 2 ] )
+						if relative_position == -1 then
+							cat_item.value = math.min( ( cat_item.value or -1 ) + 1, cat_item.range[ 2 ] )
 
-				elseif relative_position == -3 then
-					cat_item.value = ( cat_item.value or 0 ) - 1
+						elseif relative_position == -3 then
+							cat_item.value = ( cat_item.value or 0 ) - 1
 
-					if cat_item.value < cat_item.range[ 1 ] then
-						cat_item.value = false
+							if cat_item.value < cat_item.range[ 1 ] then
+								cat_item.value = false
+							end
+						end
+
+						break
 					end
 				end
-
-				break
 			end
 		end
 
@@ -850,5 +884,9 @@ while running do
 		end
 	end
 
-	draw()
+	if state == states.category_screen then
+		draw_category_screen()
+	end
 end
+
+term.setCursorPos( 1, 1 )
