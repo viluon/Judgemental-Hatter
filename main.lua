@@ -306,7 +306,7 @@ function print_top_bar()
 	end
 
 	term.setTextColour( colours.white )
-	term.write( "Judgemental Hatter - by @viluon" )
+	term.write( "Judgemental Hatter" )
 
 	-- Print number of awarded top hats into the top bar
 	if hats > 0 then
