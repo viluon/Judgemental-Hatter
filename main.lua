@@ -2,6 +2,29 @@
 -- Judgemental Hatter, CCJam judgement helper software by @viluon
 -- 🎩
 
+-- The following disclaimer applies to the ease_in_out_quad function, defined further down the file, which has been taken
+-- (with slight modifications) from Robert Penner's Easing Equations library for Lua (https://github.com/EmmanuelOga/easing)
+--[[
+	Disclaimer for Robert Penner's Easing Equations license:
+	TERMS OF USE - EASING EQUATIONS
+	Open source under the BSD License.
+	Copyright © 2001 Robert Penner
+	All rights reserved.
+	Redistribution and use in source and binary forms, with or without modification, are permitted provided that
+	the following conditions are met:
+			* Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+			* Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer
+			  in the documentation and/or other materials provided with the distribution.
+			* Neither the name of the author nor the names of contributors may be used to endorse or promote products derived from this software
+			  without specific prior written permission.
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
+	BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+	SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+	DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+	NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+]]
+
 local directory = fs.getDir( shell.getRunningProgram() )
 
 local old_term = term.current()
@@ -22,14 +45,19 @@ local state = states.welcome_screen
 local scroll = 1
 local total_y = 2
 local top_bar_position = 1
+local top_bar_previous_target_position = top_bar_position
+local top_bar_target_position = top_bar_position
+local top_bar_start_anim_time = -1
+local anim_in_progress = false
 
-local	draw_category_screen, draw_hat, draw_welcome_screen, pick_scoring_system, print_top_bar
+local	draw_category_screen, draw_hat, draw_welcome_screen, pick_scoring_system, print_top_bar, ease_in_out_quad
 
 local item_not_judged_text = "Category not judged"
 local finish_button_text = " Finish "
 local arrow_position = 5
 
 local is_game = false
+local hats = 0
 
 local categories
 local scoring_system
@@ -55,12 +83,10 @@ local scoring_systems = {
 --- Redraw the screen
 -- @return nil
 function draw_category_screen()
-	main_window.setVisible( false )
-
 	term.setBackgroundColour( colours.white )
 	term.clear()
 
-	local hats = 0
+	hats = 0
 	total_y = 2
 
 	-- Loop through all categories
@@ -128,26 +154,30 @@ function draw_category_screen()
 		local _, newline_count = description:gsub( "\n", "" )
 
 		total_y = total_y + math.max( 4, newline_count + 2 )
-	end	-- Looped through all categories 
-
-	print_top_bar()
-
-	-- Print number of awarded top hats into the top bar
-	if hats > 0 then
-		local hat_text = hats .. " top hat" .. ( hats > 1 and "s" or "" )
-
-		term.setTextColour( colours.yellow )
-		term.setCursorPos( w - #hat_text, top_bar_position )
-		term.write( hat_text )
-	end
+	end	-- Looped through all categories
 
 	-- Draw the Finish button
 	term.setCursorPos( w - #finish_button_text, h - 1 )
 	term.setTextColour( colours.white )
 	term.setBackgroundColour( colours.blue )
 	term.write( finish_button_text )
+end
 
-	main_window.setVisible( true )
+-- t = elapsed time
+-- b = begin
+-- c = change == ending - beginning
+-- d = duration (total time)
+function ease_in_out_quad( t, b, c, d )
+	if t > d then
+		return b + c
+	end
+
+	t = t / d * 2
+	if t < 1 then
+		return c / 2 * math.pow( t, 2 ) + b
+	else
+		return -c / 2 * ( ( t - 1 ) * ( t - 3 ) - 1 ) + b
+	end
 end
 
 --- Draw the welcome screen, with a hat
@@ -277,6 +307,16 @@ function print_top_bar()
 
 	term.setTextColour( colours.white )
 	term.write( "Judgemental Hatter - by @viluon" )
+
+	-- Print number of awarded top hats into the top bar
+	if hats > 0 then
+		local hat_text = hats .. " top hat" .. ( hats > 1 and "s" or "" )
+
+		term.setCursorPos( w - #hat_text, top_bar_position )
+		term.setBackgroundColour( colours.grey )
+		term.setTextColour( colours.yellow )
+		term.write( hat_text )
+	end
 end
 
 draw_welcome_screen()
@@ -838,10 +878,24 @@ end
 
 state = states.category_screen
 
-while running do
-	local ev = { coroutine.yield() }
+local last_time, end_queued = os.clock()
 
-	if ev[ 1 ] == "mouse_scroll" then
+while running do
+	if not end_queued and anim_in_progress then
+		os.queueEvent( "end" )
+	end
+
+	local ev = { coroutine.yield() }
+	
+	main_window.setVisible( false )
+
+	local now = os.clock()
+	local dt = now - last_time
+
+	if ev[ 1 ] == "end" then
+		end_queued = false
+
+	elseif ev[ 1 ] == "mouse_scroll" then
 		scroll = math.min( 1, math.max( -total_y + h, scroll - ev[ 2 ] ) )
 
 	elseif ev[ 1 ] == "terminate" then
@@ -852,6 +906,10 @@ while running do
 			if ev[ 4 ] == h - 1 and ev[ 3 ] >= w - #finish_button_text then
 				-- We hit the Finish button!
 				state = states.overview_screen
+
+				top_bar_previous_target_position = top_bar_position
+				top_bar_target_position = h
+				top_bar_start_anim_time = now
 			else
 				-- Find the item we hit
 				for i = #categories, 1, -1 do
@@ -884,9 +942,28 @@ while running do
 		end
 	end
 
-	if state == states.category_screen then
+	if true or state == states.category_screen then
 		draw_category_screen()
 	end
+	
+	print_top_bar()
+
+	anim_in_progress = false
+
+	if top_bar_position ~= top_bar_target_position then
+		anim_in_progress = true
+
+		top_bar_position = ease_in_out_quad(
+			now - top_bar_start_anim_time,
+			top_bar_previous_target_position,
+			top_bar_target_position - top_bar_previous_target_position,
+			1
+		)
+	end
+
+	main_window.setVisible( true )
+
+	last_time = now
 end
 
 term.setCursorPos( 1, 1 )
