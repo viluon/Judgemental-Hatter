@@ -1,5 +1,5 @@
 
---- Wrap a text to the given maximum width
+--- Wrap text to the given maximum width
 -- @param text Text to wrap
 -- @param width Maximum line width
 -- @return lines Array of lines

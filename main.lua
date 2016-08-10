@@ -89,29 +89,36 @@ function wrap( text, width )
 	local lines
 
 	if text:find( "\n" ) then
+		-- Deal with newlines
 		lines = {}
 
 		for line in ( text .. "\n" ):gmatch( "(.-)\n" ) do
+			-- Wrap each *original* line separately and combine them
 			for i, l in ipairs( wrap( line, width ) ) do
 				lines[ #lines + 1 ] = l
 			end
 		end
 	else
+		-- No newlines found, wrap the text
 		lines = { "" }
 		
 		for word in text:gmatch( "(%S+)" ) do
 			if #word > width then
+				-- Word exceeds line width
 				local current_pos = 1
 
 				while current_pos < #word do
+					-- Split into pieces of the maximum width and save them as new lines
 					lines[ #lines + 1 ] = word:sub( current_pos, current_pos + width - 1 )
 					current_pos = current_pos + width
 				end
 
 			elseif #lines[ #lines ] + #word <= width then
+				-- The word still fits on this line
 				lines[ #lines ] = lines[ #lines ] .. word .. " "
 
 			else
+				-- Neither of the 2 cases above, start a new line
 				lines[ #lines + 1 ] = word .. " "
 			end
 		end
@@ -250,12 +257,13 @@ function draw_welcome_screen()
 end
 
 --- Prints a hat
+-- @param inverted Whether the colours should be inverted
 -- @return Empty string
-function draw_hat()
+function draw_hat( inverted )
 	local old_tc, old_bc = term.getTextColour(), term.getBackgroundColour()
 
-	term.setTextColour( colours.white )
-	term.setBackgroundColour( colours.grey )
+	term.setTextColour( inverted and colours.grey or colours.white )
+	term.setBackgroundColour( inverted and colours.white or colours.grey )
 	-- The awesomeness is real
 	term.write( "\133\138" )
 
